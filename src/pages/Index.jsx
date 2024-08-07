@@ -1,6 +1,7 @@
 import { useState, useCallback, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useLoader } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
+import { useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const Model = ({ url }) => {
