@@ -104,112 +104,119 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <h1 className="text-4xl font-bold mb-8">JBL File Viewer</h1>
-      <input
-        type="file"
-        accept=".jbl,.gltf,.glb"
-        onChange={handleFileChange}
-        className="mb-8 p-2 border border-gray-300 rounded"
-      />
-      {file && (
-        <>
-          <div className="w-full max-w-2xl h-[400px] bg-white rounded-lg shadow-lg overflow-hidden mb-4">
-            <Canvas>
-              <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-                <ambientLight intensity={1.5} />
-                <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
-                <Model url={file} scale={scale} cropCylinder={isCropped ? cropCylinderRef : null} />
-                <CropCylinder
-                  position={cylinderPosition}
-                  radius={cylinderRadius}
-                  height={cylinderHeight}
-                  setRef={setCropCylinderRef}
-                />
-                <OrbitControls />
-              </Suspense>
-            </Canvas>
-          </div>
-          <div className="w-full max-w-2xl mb-4 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Adjust Scale:
-              </label>
-              <Slider
-                defaultValue={[1]}
-                max={2}
-                min={0.1}
-                step={0.1}
-                onValueChange={handleScaleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cylinder Radius:
-              </label>
-              <Slider
-                defaultValue={[1]}
-                max={2}
-                min={0.1}
-                step={0.1}
-                onValueChange={(value) => setCylinderRadius(value[0])}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cylinder Height:
-              </label>
-              <Slider
-                defaultValue={[2]}
-                max={4}
-                min={0.5}
-                step={0.1}
-                onValueChange={(value) => setCylinderHeight(value[0])}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cylinder Position X:
-              </label>
-              <Slider
-                defaultValue={[0]}
-                max={2}
-                min={-2}
-                step={0.1}
-                onValueChange={(value) => handlePositionChange(0, value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cylinder Position Y:
-              </label>
-              <Slider
-                defaultValue={[0]}
-                max={2}
-                min={-2}
-                step={0.1}
-                onValueChange={(value) => handlePositionChange(1, value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cylinder Position Z:
-              </label>
-              <Slider
-                defaultValue={[0]}
-                max={2}
-                min={-2}
-                step={0.1}
-                onValueChange={(value) => handlePositionChange(2, value)}
-              />
-            </div>
-            <Button onClick={handleCrop}>
-              {isCropped ? "Uncrop Model" : "Crop Model"}
-            </Button>
-          </div>
-        </>
-      )}
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-100 to-green-200">
+      <header className="bg-green-600 text-white py-4 px-6 shadow-md">
+        <h1 className="text-3xl font-bold">Welcome Carlsberg</h1>
+      </header>
+      <main className="flex-grow flex flex-col items-center justify-center p-6">
+        <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full">
+          <h2 className="text-2xl font-semibold mb-6 text-center text-green-800">JBL File Viewer</h2>
+          <input
+            type="file"
+            accept=".jbl,.gltf,.glb"
+            onChange={handleFileChange}
+            className="mb-8 p-3 border border-green-300 rounded-md w-full"
+          />
+          {file && (
+            <>
+              <div className="w-full h-[400px] bg-gray-100 rounded-lg overflow-hidden mb-6">
+                <Canvas>
+                  <Suspense fallback={null}>
+                    <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+                    <ambientLight intensity={1.5} />
+                    <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
+                    <Model url={file} scale={scale} cropCylinder={isCropped ? cropCylinderRef : null} />
+                    <CropCylinder
+                      position={cylinderPosition}
+                      radius={cylinderRadius}
+                      height={cylinderHeight}
+                      setRef={setCropCylinderRef}
+                    />
+                    <OrbitControls />
+                  </Suspense>
+                </Canvas>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Adjust Scale:
+                  </label>
+                  <Slider
+                    defaultValue={[1]}
+                    max={2}
+                    min={0.1}
+                    step={0.1}
+                    onValueChange={handleScaleChange}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cylinder Radius:
+                  </label>
+                  <Slider
+                    defaultValue={[1]}
+                    max={2}
+                    min={0.1}
+                    step={0.1}
+                    onValueChange={(value) => setCylinderRadius(value[0])}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cylinder Height:
+                  </label>
+                  <Slider
+                    defaultValue={[2]}
+                    max={4}
+                    min={0.5}
+                    step={0.1}
+                    onValueChange={(value) => setCylinderHeight(value[0])}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cylinder Position X:
+                  </label>
+                  <Slider
+                    defaultValue={[0]}
+                    max={2}
+                    min={-2}
+                    step={0.1}
+                    onValueChange={(value) => handlePositionChange(0, value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cylinder Position Y:
+                  </label>
+                  <Slider
+                    defaultValue={[0]}
+                    max={2}
+                    min={-2}
+                    step={0.1}
+                    onValueChange={(value) => handlePositionChange(1, value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cylinder Position Z:
+                  </label>
+                  <Slider
+                    defaultValue={[0]}
+                    max={2}
+                    min={-2}
+                    step={0.1}
+                    onValueChange={(value) => handlePositionChange(2, value)}
+                  />
+                </div>
+                <Button onClick={handleCrop} className="w-full bg-green-600 hover:bg-green-700">
+                  {isCropped ? "Uncrop Model" : "Crop Model"}
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </main>
     </div>
   );
 };
