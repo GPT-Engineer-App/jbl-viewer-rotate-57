@@ -1,16 +1,18 @@
 import { useState, useCallback, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Slider } from "@/components/ui/slider";
 
-const Model = ({ url }) => {
+const Model = ({ url, scale }) => {
   const gltf = useLoader(GLTFLoader, url);
-  return <primitive object={gltf.scene} />;
+  return <primitive object={gltf.scene} scale={[scale, scale, scale]} />;
 };
 
 const Index = () => {
   const [file, setFile] = useState(null);
+  const [scale, setScale] = useState(1);
 
   const handleFileChange = useCallback((event) => {
     const uploadedFile = event.target.files[0];
@@ -18,6 +20,10 @@ const Index = () => {
       const url = URL.createObjectURL(uploadedFile);
       setFile(url);
     }
+  }, []);
+
+  const handleScaleChange = useCallback((value) => {
+    setScale(value[0]);
   }, []);
 
   return (
@@ -30,16 +36,31 @@ const Index = () => {
         className="mb-8 p-2 border border-gray-300 rounded"
       />
       {file && (
-        <div className="w-full max-w-2xl h-[400px] bg-white rounded-lg shadow-lg overflow-hidden">
-          <Canvas camera={{ position: [0, 0, 5] }}>
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.5} />
-              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-              <Model url={file} />
-              <OrbitControls />
-            </Suspense>
-          </Canvas>
-        </div>
+        <>
+          <div className="w-full max-w-2xl h-[400px] bg-white rounded-lg shadow-lg overflow-hidden mb-4">
+            <Canvas>
+              <Suspense fallback={null}>
+                <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+                <ambientLight intensity={1.5} />
+                <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
+                <Model url={file} scale={scale} />
+                <OrbitControls />
+              </Suspense>
+            </Canvas>
+          </div>
+          <div className="w-full max-w-2xl mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Adjust Scale:
+            </label>
+            <Slider
+              defaultValue={[1]}
+              max={2}
+              min={0.1}
+              step={0.1}
+              onValueChange={handleScaleChange}
+            />
+          </div>
+        </>
       )}
     </div>
   );
