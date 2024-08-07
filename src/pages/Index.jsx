@@ -48,7 +48,7 @@ const Model = ({ url, scale, cropCylinder }) => {
   );
 };
 
-const CropCylinder = ({ position, radius, height, setRef }) => {
+const CropCylinder = ({ position, radius, height, setRef, visible }) => {
   const meshRef = useRef();
 
   useEffect(() => {
@@ -62,9 +62,9 @@ const CropCylinder = ({ position, radius, height, setRef }) => {
       ref={meshRef}
       args={[radius, radius, height, 32]}
       position={position}
-      visible={false}
+      visible={visible}
     >
-      <meshBasicMaterial wireframe color="red" opacity={0} transparent />
+      <meshBasicMaterial wireframe color="red" opacity={0.5} transparent />
     </Cylinder>
   );
 };
@@ -77,6 +77,7 @@ const Index = () => {
   const [cylinderRadius, setCylinderRadius] = useState(1);
   const [cylinderHeight, setCylinderHeight] = useState(2);
   const [isCropped, setIsCropped] = useState(false);
+  const [isCylinderVisible, setIsCylinderVisible] = useState(true);
 
   const handleFileChange = useCallback((event) => {
     const uploadedFile = event.target.files[0];
@@ -131,6 +132,7 @@ const Index = () => {
                       radius={cylinderRadius}
                       height={cylinderHeight}
                       setRef={setCropCylinderRef}
+                      visible={isCylinderVisible}
                     />
                     <OrbitControls />
                   </Suspense>
@@ -209,8 +211,14 @@ const Index = () => {
                     onValueChange={(value) => handlePositionChange(2, value)}
                   />
                 </div>
-                <Button onClick={handleCrop} className="w-full bg-green-600 hover:bg-green-700">
+                <Button onClick={handleCrop} className="w-full bg-green-600 hover:bg-green-700 mb-4">
                   {isCropped ? "Uncrop Model" : "Crop Model"}
+                </Button>
+                <Button 
+                  onClick={() => setIsCylinderVisible(prev => !prev)} 
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
+                  {isCylinderVisible ? "Hide Cylinder" : "Show Cylinder"}
                 </Button>
               </div>
             </>
