@@ -11,26 +11,41 @@ import ThreeBSP from '../lib/ThreeBSP';
 const Model = ({ url, scale, cropCylinder }) => {
   const gltf = useLoader(GLTFLoader, url);
   const { scene } = useThree();
+  const [croppedModel, setCroppedModel] = useState(null);
 
   useEffect(() => {
-    if (cropCylinder) {
-      const cylinderBSP = new ThreeBSP(cropCylinder);
+    if (cropCylinder && gltf) {
+      const cylinderGeometry = cropCylinder.geometry.clone();
+      cylinderGeometry.applyMatrix4(cropCylinder.matrixWorld);
+      const cylinderBSP = new ThreeBSP(cylinderGeometry);
+
+      const newScene = new THREE.Scene();
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
-          const meshBSP = new ThreeBSP(child);
+          const meshBSP = new ThreeBSP(child.geometry);
           const resultBSP = meshBSP.intersect(cylinderBSP);
           const result = resultBSP.toMesh(child.material);
           result.position.copy(child.position);
           result.rotation.copy(child.rotation);
           result.scale.copy(child.scale);
-          scene.add(result);
-          child.visible = false;
+          newScene.add(result);
         }
       });
+      setCroppedModel(newScene);
+    } else {
+      setCroppedModel(null);
     }
-  }, [gltf, cropCylinder, scene]);
+  }, [gltf, cropCylinder]);
 
-  return <primitive object={gltf.scene} scale={[scale, scale, scale]} />;
+  return (
+    <>
+      {croppedModel ? (
+        <primitive object={croppedModel} scale={[scale, scale, scale]} />
+      ) : (
+        <primitive object={gltf.scene} scale={[scale, scale, scale]} />
+      )}
+    </>
+  );
 };
 
 const CropCylinder = ({ position, radius, height, setRef }) => {
@@ -47,8 +62,9 @@ const CropCylinder = ({ position, radius, height, setRef }) => {
       ref={meshRef}
       args={[radius, radius, height, 32]}
       position={position}
+      visible={false}
     >
-      <meshBasicMaterial wireframe color="red" opacity={0.5} transparent />
+      <meshBasicMaterial wireframe color="red" opacity={0} transparent />
     </Cylinder>
   );
 };
