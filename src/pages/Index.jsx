@@ -47,9 +47,8 @@ const CropCylinder = ({ position, radius, height, setRef }) => {
       ref={meshRef}
       args={[radius, radius, height, 32]}
       position={position}
-      visible={false}
     >
-      <meshBasicMaterial wireframe color="red" />
+      <meshBasicMaterial wireframe color="red" opacity={0.5} transparent />
     </Cylinder>
   );
 };
@@ -77,7 +76,15 @@ const Index = () => {
   }, []);
 
   const handleCrop = useCallback(() => {
-    setIsCropped(true);
+    setIsCropped((prev) => !prev);
+  }, []);
+
+  const handlePositionChange = useCallback((axis, value) => {
+    setCylinderPosition((prev) => {
+      const newPosition = [...prev];
+      newPosition[axis] = value[0];
+      return newPosition;
+    });
   }, []);
 
   return (
@@ -145,8 +152,44 @@ const Index = () => {
                 onValueChange={(value) => setCylinderHeight(value[0])}
               />
             </div>
-            <Button onClick={handleCrop} disabled={isCropped}>
-              Crop Model
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cylinder Position X:
+              </label>
+              <Slider
+                defaultValue={[0]}
+                max={2}
+                min={-2}
+                step={0.1}
+                onValueChange={(value) => handlePositionChange(0, value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cylinder Position Y:
+              </label>
+              <Slider
+                defaultValue={[0]}
+                max={2}
+                min={-2}
+                step={0.1}
+                onValueChange={(value) => handlePositionChange(1, value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cylinder Position Z:
+              </label>
+              <Slider
+                defaultValue={[0]}
+                max={2}
+                min={-2}
+                step={0.1}
+                onValueChange={(value) => handlePositionChange(2, value)}
+              />
+            </div>
+            <Button onClick={handleCrop}>
+              {isCropped ? "Uncrop Model" : "Crop Model"}
             </Button>
           </div>
         </>
